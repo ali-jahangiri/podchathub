@@ -2,6 +2,8 @@ import Container from "components/Container/Container";
 import Header from "components/Header";
 import MessageList from "components/Message/List/MessageList";
 import MessageInput from "components/MessageInput";
+import { useEffect, useRef, useState } from "react";
+import selfClearTimeout from "utils/selfClearTimeout";
 import StyledRoom from "./room.style";
 
 const staticItems = [
@@ -118,13 +120,43 @@ const staticItems = [
 ];
 
 const Room = () => {
+	const [currentStatic, setCurrentStatic] = useState(staticItems);
+	const messageListContainerRef = useRef();
+
+	function addStaticItem() {
+		setCurrentStatic(prev => [
+			...prev,
+			{
+				time: "08:32",
+				source: "owner",
+				content: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ",
+				author: "شما",
+				asNew: true,
+			},
+		]);
+
+		selfClearTimeout(scrollToBottomHandler, 10);
+	}
+
+	useEffect(
+		function initialScrollToEndOfMessageContainer() {
+			if (messageListContainerRef.current) {
+				scrollToBottomHandler();
+			}
+		},
+		[messageListContainerRef]
+	);
+
+	const scrollToBottomHandler = (behavior = "default") => {
+		messageListContainerRef.current.scrollTop = messageListContainerRef.current.scrollHeight;
+	};
+
 	return (
 		<StyledRoom>
 			<Container>
 				<Header />
-				<MessageList items={staticItems} />
-				<div style={{ backgroundColor: "red", width: "100%" }}></div>
-				<MessageInput />
+				<MessageList containerRef={messageListContainerRef} items={currentStatic} />
+				<MessageInput onSendMessage={addStaticItem} />
 			</Container>
 		</StyledRoom>
 	);

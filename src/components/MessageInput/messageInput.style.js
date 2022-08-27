@@ -45,7 +45,6 @@ const StyledMessageInput = WrapWithStyled("div", theme => ({
 
 			&__sendTrigger {
 				margin-right: ${theme.space[5]};
-				background-color: ${theme.colors.pallet.natural[2]};
 				border-radius: ${theme.radius[3]};
 				cursor: pointer;
 				width: 70px;
@@ -56,12 +55,23 @@ const StyledMessageInput = WrapWithStyled("div", theme => ({
 				transition: ${theme.animateDuration.fast};
 				height: 64px;
 				align-self: flex-end;
+				background-color: ${theme.colors.brand.primary};
 
 				svg {
 					width: 1.3rem;
 					height: 1.3rem;
-					fill: ${theme.colors.pallet.natural[8]};
 					transform: rotate(-135deg);
+					fill: white;
+					transition: ${theme.animateDuration.fast};
+				}
+
+				&:disabled {
+					background-color: ${theme.colors.pallet.natural[2]};
+					cursor: default;
+
+					svg {
+						fill: ${theme.colors.pallet.natural[8]};
+					}
 				}
 			}
 		}

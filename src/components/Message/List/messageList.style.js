@@ -11,7 +11,7 @@ const StyledMessageList = WrapWithStyled("div", theme => ({
 			display: none;
 		}
 
-		margin-bottom: ${theme.space[11]};
+		margin-bottom: ${theme.space[8]};
 	`,
 }));
 

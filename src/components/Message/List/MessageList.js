@@ -2,9 +2,9 @@ import checkForRenderBasicDetails from "utils/checkForRenderBasicDetails";
 import MessageItem from "../Item/MessageItem";
 import StyledMessageList from "./messageList.style";
 
-const MessageList = ({ items = [] }) => {
+const MessageList = ({ items = [], containerRef }) => {
 	return (
-		<StyledMessageList>
+		<StyledMessageList ref={containerRef}>
 			{items.map((message, i) => (
 				<MessageItem haveToRenderBasicDetails={checkForRenderBasicDetails(message, items[i - 1])} {...message} key={i} />
 			))}

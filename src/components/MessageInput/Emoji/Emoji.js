@@ -38,9 +38,12 @@ const Emoji = ({ onSelect }) => {
 
 	return (
 		<StyledEmoji ref={emojiContainerRef}>
-			<div onClick={togglePopoverStatusHandler} className={`emoji__trigger ${isPopoverOpen ? "emoji__trigger--active" : ""}`}>
+			<button
+				onClick={togglePopoverStatusHandler}
+				className={`emoji__trigger ${isPopoverOpen ? "emoji__trigger--active" : ""}`}
+			>
 				<EmojiIcon />
-			</div>
+			</button>
 			{haveToRenderPopover && (
 				<div className={`emoji__popover ${isPopoverOpen ? "emoji__popover--show" : ""}`}>
 					<div className="emoji__itemContainer">

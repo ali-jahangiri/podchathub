@@ -16,7 +16,7 @@ const ClipIcon = () => (
 	</svg>
 );
 
-const MessageInput = () => {
+const MessageInput = ({ onSendMessage }) => {
 	const [inputValue, setInputValue] = useState("");
 
 	const onInputValueChange = e => {
@@ -33,7 +33,9 @@ const MessageInput = () => {
 
 	const onSendTriggerClickHandler = () => {};
 
-	const sendMessageHandler = () => {};
+	const sendMessageHandler = () => {
+		onSendMessage(inputValue);
+	};
 
 	return (
 		<StyledMessageInput>
@@ -51,7 +53,7 @@ const MessageInput = () => {
 					<ClipIcon />
 				</div>
 			</div>
-			<button onClick={onSendTriggerClickHandler} className="messageInput__sendTrigger">
+			<button disabled={!inputValue} onClick={onSendTriggerClickHandler} className="messageInput__sendTrigger">
 				<SendIcon />
 			</button>
 		</StyledMessageInput>

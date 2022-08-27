@@ -14,6 +14,9 @@ const StyledEmoji = WrapWithStyled("div", theme => ({
 				justify-content: center;
 				cursor: pointer;
 				user-select: none;
+				background-color: transparent;
+				border: none;
+				outline-color: ${theme.colors.brand.primary};
 
 				& > svg {
 					width: 1.3rem;
