@@ -180,7 +180,7 @@ const tokens = {
 		light: 300,
 	},
 	fonts: {
-		primary: "",
+		primary: "Vazirmatn",
 		secondary: "",
 	},
 	letterSpacings: {
