@@ -1,10 +1,11 @@
-import Container from "components/Container/Container";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Container from "components/Container";
 import Header from "components/Header";
 import MessageList from "components/Message/List/MessageList";
 import MessageInput from "components/MessageInput";
-import { useEffect, useRef, useState } from "react";
 import selfClearTimeout from "utils/selfClearTimeout";
 import StyledRoom from "./room.style";
+import InitialIntro from "components/InitialIntro/InitialIntro";
 
 const staticItems = [
 	{
@@ -121,6 +122,7 @@ const staticItems = [
 
 const Room = () => {
 	const [currentStatic, setCurrentStatic] = useState(staticItems);
+	const [showIntro, setShowIntro] = useState(true);
 	const messageListContainerRef = useRef();
 
 	function addStaticItem(content) {
@@ -137,13 +139,13 @@ const Room = () => {
 		selfClearTimeout(() => scrollToBottomHandler("smooth"), 10);
 	}
 
-	useEffect(
+	useLayoutEffect(
 		function initialScrollToEndOfMessageContainer() {
-			if (messageListContainerRef.current) {
+			if (messageListContainerRef.current && !showIntro) {
 				scrollToBottomHandler();
 			}
 		},
-		[messageListContainerRef]
+		[messageListContainerRef, showIntro]
 	);
 
 	const scrollToBottomHandler = (behavior = "default") => {
@@ -154,12 +156,21 @@ const Room = () => {
 		}
 	};
 
+	// test DELETE THIS
+	useEffect(() => {
+		selfClearTimeout(() => {
+			setShowIntro(false);
+		}, 3500);
+	}, []);
+
 	return (
 		<StyledRoom>
 			<Container>
-				<Header />
-				<MessageList containerRef={messageListContainerRef} items={currentStatic} />
-				<MessageInput onSendMessage={addStaticItem} />
+				<InitialIntro showIntro={showIntro}>
+					<Header />
+					<MessageList containerRef={messageListContainerRef} items={currentStatic} />
+					<MessageInput onSendMessage={addStaticItem} />
+				</InitialIntro>
 			</Container>
 		</StyledRoom>
 	);
