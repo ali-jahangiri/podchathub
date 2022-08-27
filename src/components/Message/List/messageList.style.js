@@ -5,7 +5,10 @@ const StyledMessageList = WrapWithStyled("div", theme => ({
 	base: css`
 		height: 100%;
 		width: 100%;
-		overflow-y: auto;
+		overflow: auto;
+		display: flex;
+		flex-direction: column;
+		/* justify-content: flex-end; */
 
 		&::-webkit-scrollbar {
 			display: none;

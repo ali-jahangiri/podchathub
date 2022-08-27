@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import StyledMessageInput from "./messageInput.style";
 import TextareaAutosize from "react-textarea-autosize";
 import Emoji from "./Emoji/Emoji";
@@ -18,6 +18,7 @@ const ClipIcon = () => (
 
 const MessageInput = ({ onSendMessage }) => {
 	const [inputValue, setInputValue] = useState("");
+	const textareaRef = useRef();
 
 	const onInputValueChange = e => {
 		setInputValue(e.target.value);
@@ -31,17 +32,24 @@ const MessageInput = ({ onSendMessage }) => {
 		}
 	};
 
-	const onSendTriggerClickHandler = () => {};
+	const onSendTriggerClickHandler = () => {
+		setInputValue("");
+		sendMessageHandler();
+	};
 
 	const sendMessageHandler = () => {
 		onSendMessage(inputValue);
+		focusOnTextareaHandler();
 	};
+
+	const focusOnTextareaHandler = () => textareaRef.current.focus();
 
 	return (
 		<StyledMessageInput>
 			<div className="messageInput__innerContainer">
 				<Emoji />
 				<TextareaAutosize
+					ref={textareaRef}
 					cacheMeasurements
 					placeholder="پیامی بنویسید..."
 					className="messageInput__input"

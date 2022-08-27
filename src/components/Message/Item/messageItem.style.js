@@ -1,5 +1,15 @@
-import { css } from "styled-components";
+import { css, keyframes } from "styled-components";
 import WrapWithStyled from "utils/WrapWithStyled";
+
+const animateNewMessageGrow = keyframes`
+	from {
+		height: 0px;
+	}
+
+	to {
+		height: 200px;
+	}
+`;
 
 const StyledMessageItem = WrapWithStyled("div", theme => ({
 	base: css`
@@ -100,6 +110,11 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 						margin-left: ${theme.space[18]};
 					}
 				}
+			}
+
+			&--new {
+				animation: ${animateNewMessageGrow} ${theme.animateDuration.slow} forwards alternate
+					cubic-bezier(0.755, 0.05, 0.855, 0.06);
 			}
 		}
 	`,

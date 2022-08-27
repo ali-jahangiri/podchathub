@@ -123,19 +123,18 @@ const Room = () => {
 	const [currentStatic, setCurrentStatic] = useState(staticItems);
 	const messageListContainerRef = useRef();
 
-	function addStaticItem() {
+	function addStaticItem(content) {
 		setCurrentStatic(prev => [
 			...prev,
 			{
 				time: "08:32",
 				source: "owner",
-				content: "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ",
+				content,
 				author: "شما",
 				asNew: true,
 			},
 		]);
-
-		selfClearTimeout(scrollToBottomHandler, 10);
+		selfClearTimeout(() => scrollToBottomHandler("smooth"), 10);
 	}
 
 	useEffect(
@@ -148,7 +147,11 @@ const Room = () => {
 	);
 
 	const scrollToBottomHandler = (behavior = "default") => {
-		messageListContainerRef.current.scrollTop = messageListContainerRef.current.scrollHeight;
+		if (behavior === "smooth") {
+			messageListContainerRef.current.scrollTo({ left: 0, top: messageListContainerRef.current.scrollHeight, behavior });
+		} else {
+			messageListContainerRef.current.scrollTop = messageListContainerRef.current.scrollHeight;
+		}
 	};
 
 	return (
