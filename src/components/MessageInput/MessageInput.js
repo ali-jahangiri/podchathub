@@ -1,4 +1,3 @@
-import Container from "components/Container/Container";
 import { useState } from "react";
 import StyledMessageInput from "./messageInput.style";
 import TextareaAutosize from "react-textarea-autosize";
@@ -42,29 +41,27 @@ const MessageInput = () => {
 	const sendMessageHandler = () => {};
 
 	return (
-		<Container>
-			<StyledMessageInput>
-				<div className="messageInput__innerContainer">
-					<div className="messageInput__emoji">
-						<EmojiIcon />
-					</div>
-					<TextareaAutosize
-						cacheMeasurements
-						placeholder="پیامی بنویسید..."
-						className="messageInput__input"
-						value={inputValue}
-						onChange={onInputValueChange}
-						onKeyDown={mimickingTextareaSubmitHandler}
-					/>
-					<div className="messageInput__attachFile">
-						<ClipIcon />
-					</div>
+		<StyledMessageInput>
+			<div className="messageInput__innerContainer">
+				<div className="messageInput__emoji">
+					<EmojiIcon />
 				</div>
-				<button onClick={onSendTriggerClickHandler} className="messageInput__sendTrigger">
-					<SendIcon />
-				</button>
-			</StyledMessageInput>
-		</Container>
+				<TextareaAutosize
+					cacheMeasurements
+					placeholder="پیامی بنویسید..."
+					className="messageInput__input"
+					value={inputValue}
+					onChange={onInputValueChange}
+					onKeyDown={mimickingTextareaSubmitHandler}
+				/>
+				<div className="messageInput__attachFile">
+					<ClipIcon />
+				</div>
+			</div>
+			<button onClick={onSendTriggerClickHandler} className="messageInput__sendTrigger">
+				<SendIcon />
+			</button>
+		</StyledMessageInput>
 	);
 };
 

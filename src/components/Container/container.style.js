@@ -23,7 +23,7 @@ const StyledContainer = WrapWithStyled("div", theme => ({
 		}
 
 		@media (min-width: 1400px) {
-			max-width: 90%;
+			max-width: 1620px;
 		}
 	`,
 }));
