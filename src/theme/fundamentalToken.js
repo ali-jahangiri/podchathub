@@ -111,14 +111,7 @@ const tokens = {
 			},
 		},
 		brand: {
-			primary: {
-				1: "#ebf3ff",
-				2: "#02c1ff",
-				4: "#02a1ff",
-				5: "#015dab",
-				6: "#0186f6",
-				8: "#0170cd",
-			},
+			primary: "#0086FF",
 			secondary: {
 				2: "#dbffff",
 				4: "#c7fef9",

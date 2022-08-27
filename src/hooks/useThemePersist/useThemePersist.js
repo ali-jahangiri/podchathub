@@ -1,7 +1,13 @@
 import { useState } from "react";
+import tokens from "../../theme/fundamentalToken";
 
 const useThemePersis = () => {
-	const [theme, setTheme] = useState(function detectFunctionFromLocalStorage() {});
+	const [theme, setTheme] = useState(function detectFunctionFromLocalStorage() {
+		return {
+			name: "light",
+			tokens: tokens,
+		};
+	});
 
 	return [theme, setTheme];
 };
