@@ -14,20 +14,6 @@ const StyledMessageInput = WrapWithStyled("div", theme => ({
 				border-radius: ${theme.radius[3]};
 			}
 
-			&__emoji {
-				width: 70px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				cursor: pointer;
-
-				& > svg {
-					width: 1.3rem;
-					height: 1.3rem;
-					fill: ${theme.colors.pallet.natural[8]};
-				}
-			}
-
 			&__input {
 				width: 100%;
 				font-family: ${theme.fonts.primary};
