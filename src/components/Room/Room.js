@@ -6,6 +6,7 @@ import MessageInput from "components/MessageInput";
 import selfClearTimeout from "utils/selfClearTimeout";
 import StyledRoom from "./room.style";
 import InitialIntro from "components/InitialIntro/InitialIntro";
+import usePodSdk from "hooks/usePodSdk/usePodSdk";
 
 const staticItems = [
 	{
@@ -124,6 +125,9 @@ const Room = () => {
 	const [currentStatic, setCurrentStatic] = useState(staticItems);
 	const [showIntro, setShowIntro] = useState(true);
 	const messageListContainerRef = useRef();
+
+	const chat = usePodSdk();
+	console.log(chat);
 
 	function addStaticItem(content) {
 		setCurrentStatic(prev => [
