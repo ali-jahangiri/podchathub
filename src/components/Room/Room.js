@@ -1,12 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Container from "components/Container";
 import Header from "components/Header";
 import MessageList from "components/Message/List/MessageList";
 import MessageInput from "components/MessageInput";
 import selfClearTimeout from "utils/selfClearTimeout";
 import StyledRoom from "./room.style";
-import InitialIntro from "components/InitialIntro/InitialIntro";
-import usePodSdk from "hooks/usePodSdk/usePodSdk";
 
 const staticItems = [
 	{
@@ -123,11 +121,7 @@ const staticItems = [
 
 const Room = () => {
 	const [currentStatic, setCurrentStatic] = useState(staticItems);
-	const [showIntro, setShowIntro] = useState(true);
 	const messageListContainerRef = useRef();
-
-	const chat = usePodSdk();
-	console.log(chat);
 
 	function addStaticItem(content) {
 		setCurrentStatic(prev => [
@@ -145,11 +139,11 @@ const Room = () => {
 
 	useLayoutEffect(
 		function initialScrollToEndOfMessageContainer() {
-			if (messageListContainerRef.current && !showIntro) {
+			if (messageListContainerRef.current) {
 				scrollToBottomHandler();
 			}
 		},
-		[messageListContainerRef, showIntro]
+		[messageListContainerRef]
 	);
 
 	const scrollToBottomHandler = (behavior = "default") => {
@@ -160,21 +154,12 @@ const Room = () => {
 		}
 	};
 
-	// test DELETE THIS
-	useEffect(() => {
-		selfClearTimeout(() => {
-			setShowIntro(false);
-		}, 3500);
-	}, []);
-
 	return (
 		<StyledRoom>
 			<Container>
-				<InitialIntro showIntro={showIntro}>
-					<Header />
-					<MessageList containerRef={messageListContainerRef} items={currentStatic} />
-					<MessageInput onSendMessage={addStaticItem} />
-				</InitialIntro>
+				<Header />
+				<MessageList containerRef={messageListContainerRef} items={currentStatic} />
+				<MessageInput onSendMessage={addStaticItem} />
 			</Container>
 		</StyledRoom>
 	);

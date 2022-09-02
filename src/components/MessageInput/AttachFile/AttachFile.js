@@ -1,5 +1,6 @@
 import { useOutsideClick } from "hooks/useOutsideClick";
-import { useRef, useState } from "react";
+import usePodSdk from "hooks/usePodSdk/usePodSdk";
+import { useEffect, useRef, useState } from "react";
 import selfClearTimeout from "utils/selfClearTimeout";
 import StyledAttachFile from "./attachFile.style";
 
@@ -26,6 +27,8 @@ const AttachFile = () => {
 	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 	const [haveToRenderPopover, setHaveToRenderPopover] = useState(false);
 
+	const [uploadedFile, setUploadedFile] = useState(null);
+
 	const attachFileContainerRef = useRef();
 	const mediaInputRef = useRef();
 	const docInputRef = useRef();
@@ -51,14 +54,85 @@ const AttachFile = () => {
 
 	useOutsideClick(attachFileContainerRef, closePopoverHandler);
 
-	const mediaInputChangeHandler = e => {};
+	const mediaInputChangeHandler = ({ target }) => {};
 
-	const docInputChangeHandler = e => {};
+	const docInputChangeHandler = ({ target }) => {
+		if (target.files) {
+			readFileHandler(target.files[0], docFile => {
+				console.log(docFile);
+			});
+			// reset input value imperatively!
+			target.value = "";
+		}
+	};
+
+	const readFileHandler = (fileField, onFileRead) => {
+		const reader = new FileReader();
+		reader.addEventListener("load", () => {
+			const uploadedFile = reader.result;
+			onFileRead(uploadedFile);
+		});
+
+		reader.readAsDataURL(fileField);
+	};
+
+	const inputChangeHandler = ({ target }) => {};
 
 	const triggerFileInputHandler = target => target.click();
 
+	const chatInstance = usePodSdk();
+
+	function get() {
+		const result = chatInstance.getAllThreads({}, result => {
+			console.log(result);
+		});
+	}
+
+	function getContacts() {
+		chatInstance.getContacts({}, result => {
+			console.log(result);
+		});
+	}
+
+	function add() {
+		chatInstance.addContacts(
+			{
+				firstName: "علی قدوسی",
+				lastName: "جان",
+				cellphoneNumber: "09917240664",
+				typeCode: "default",
+				// username: "ali.jon",
+			},
+			result => {
+				console.log("added", result);
+			}
+		);
+	}
+
+	const ROOM_ID = "THIS_IS_ROOM_ID_1";
+	function create() {}
+
+	function search() {
+		chatInstance.getThreads({ title: ROOM_ID, threadName: ROOM_ID }, res => {
+			console.log(res);
+		});
+	}
+
 	return (
 		<StyledAttachFile ref={attachFileContainerRef}>
+			{/* 
+			
+**
+
+			*/}
+
+			<button onClick={get}>get</button>
+			<button onClick={create}>create</button>
+
+			<button onClick={getContacts}>contaxt</button>
+			<button onClick={add}>add</button>
+			<button onClick={search}>search</button>
+
 			<input
 				accept="image/jpeg, image/png, image/jpg"
 				onChange={mediaInputChangeHandler}

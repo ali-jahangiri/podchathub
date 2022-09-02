@@ -28,7 +28,7 @@ const InitialIntro = ({ showIntro, children }) => {
 					animateHelper ? "initialIntro--animate" : ""
 				}`}
 			>
-				{renderIntro && (
+				{renderIntro ? (
 					<div className="initialIntro__container">
 						<div className="initialIntro__iconBox">
 							<p>پاد</p>
@@ -39,9 +39,10 @@ const InitialIntro = ({ showIntro, children }) => {
 							<span>در سایه سلامتی</span>
 						</div>
 					</div>
+				) : (
+					children
 				)}
 			</StyledInitialIntro>
-			{!showIntro && children}
 		</Fragment>
 	);
 };
