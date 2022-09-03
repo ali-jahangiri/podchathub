@@ -1,5 +1,5 @@
 import { useState } from "react";
-import tokens from "../../theme/fundamentalToken";
+import tokens from "../../theme/tokens";
 
 const useThemePersis = () => {
 	const [theme, setTheme] = useState(function detectFunctionFromLocalStorage() {

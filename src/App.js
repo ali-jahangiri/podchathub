@@ -1,12 +1,12 @@
 import { ThemeProvider } from "styled-components";
-import useThemePersis from "hooks/useThemePersist/useThemePersist";
+import useThemePersis from "hooks/useThemePersist";
 
-import Room from "components/Room/Room";
+import Room from "screen/Room/Room";
 import StyleResetter from "providers/StyleResetter";
-import BaseStyle from "providers/BaseStyle/BaseStyle";
+import BaseStyle from "providers/BaseStyle";
 import PodSdkProvider from "providers/PodSdk/PodSdkProvider";
-import InitialGate from "providers/InitialGate/InitialGateProvider";
-import StoreProvider from "providers/Store/Store";
+import StoreProvider from "providers/Store";
+import Setup from "screen/Setup";
 
 function App({ token, threadId, doctorPhoneNumbers, threadDescription }) {
 	const [theme] = useThemePersis();
@@ -23,9 +23,10 @@ function App({ token, threadId, doctorPhoneNumbers, threadDescription }) {
 					threadId={threadId}
 				>
 					<PodSdkProvider>
-						<InitialGate>
+						{/* Screen component hierarchy */}
+						<Setup>
 							<Room />
-						</InitialGate>
+						</Setup>
 					</PodSdkProvider>
 				</StoreProvider>
 			</ThemeProvider>

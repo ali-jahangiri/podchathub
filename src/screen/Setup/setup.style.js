@@ -1,10 +1,9 @@
 import { css } from "styled-components";
 import WrapWithStyled from "utils/WrapWithStyled";
 
-const StyledInitialIntro = WrapWithStyled("div", theme => ({
+const StyledSetup = WrapWithStyled("div", theme => ({
 	base: css`
-		&.initialIntro,
-		.initialIntro {
+		.setup {
 			&__container {
 				position: fixed;
 				left: 0;
@@ -14,6 +13,7 @@ const StyledInitialIntro = WrapWithStyled("div", theme => ({
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				flex-direction: column;
 				transition: ${theme.animateDuration.fast};
 				backdrop-filter: blur(20px);
 			}
@@ -24,6 +24,8 @@ const StyledInitialIntro = WrapWithStyled("div", theme => ({
 				opacity: 0;
 				margin-top: -6rem;
 				text-align: center;
+				position: relative;
+				width: 400px;
 
 				p {
 					font-size: 5rem;
@@ -68,8 +70,29 @@ const StyledInitialIntro = WrapWithStyled("div", theme => ({
 				z-index: 9;
 			}
 
-			&--animate {
-				.initialIntro {
+			&__alertContainer {
+				position: absolute;
+				top: 200px;
+				left: 50%;
+				opacity: 0;
+				transition: ${theme.animateDuration.fast};
+				opacity: 0;
+				width: 80%;
+				transform: translateX(-50%);
+
+				button {
+					margin-top: ${theme.space[9]};
+				}
+
+				&--show {
+					opacity: 1;
+				}
+			}
+		}
+
+		&.setup {
+			&--fadeIn {
+				.setup {
 					&__iconBox {
 						width: 120px;
 						height: 120px;
@@ -88,14 +111,8 @@ const StyledInitialIntro = WrapWithStyled("div", theme => ({
 					}
 				}
 			}
-
-			&--fadeout {
-				.initialIntro__container {
-					opacity: 0;
-				}
-			}
 		}
 	`,
 }));
 
-export default StyledInitialIntro;
+export default StyledSetup;

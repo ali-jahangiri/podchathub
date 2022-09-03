@@ -8,7 +8,6 @@ const StyledMessageList = WrapWithStyled("div", theme => ({
 		overflow: auto;
 		display: flex;
 		flex-direction: column;
-		/* justify-content: flex-end; */
 
 		&::-webkit-scrollbar {
 			display: none;

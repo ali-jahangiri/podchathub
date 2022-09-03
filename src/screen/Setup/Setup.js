@@ -1,0 +1,175 @@
+import { useEffect, useState, useLayoutEffect } from "react";
+import usePodSdk from "hooks/usePodSdk";
+import useStore from "hooks/useStore";
+import ProgressBar from "components/ProgressBar";
+import Button from "components/Button";
+import Alert from "components/Alert";
+
+import promiseTimeout from "utils/promiseTimeout";
+import promisify from "utils/promisify";
+import selfClearTimeout from "utils/selfClearTimeout";
+import StyledSetup from "./setup.style";
+import { FLOW_BLOCK_TIMEOUT, TIMEOUT_ERROR_MESSAGE } from "../../static/setup";
+
+const Setup = ({ children }) => {
+	const [showSetupScreen, setShowSetupScreen] = useState(true);
+	const [progressBarDetails, setProgressBarDetails] = useState({
+		totalStep: 3,
+		currentStep: 0,
+		render: false,
+	});
+	const [flowError, setFlowError] = useState(null);
+	const chatInstance = usePodSdk();
+	const [store] = useStore();
+
+	const [animateScreenFadeIn, setAnimateScreenFadeIn] = useState(false);
+
+	const {
+		ownerProps: { threadId, doctorPhoneNumbers, threadDescription },
+	} = store;
+
+	const onChatReadyHandler = () =>
+		promisify((res, rej) => {
+			console.log("LIFECYCLE", "chat ready");
+			chatInstance.on("chatReady", onReadyError => {
+				if (!onReadyError) res();
+				rej();
+			});
+		});
+
+	const getTargetThread = () =>
+		promisify((res, rej) => {
+			console.log("LIFECYCLE", "get target thread");
+			chatInstance.getThreads({ threadName: threadId }, ({ result }) => {
+				res(result.threads[0]);
+				setProgressBarDetails({ currentStep: 1, totalStep: 3 });
+			});
+		});
+
+	function threadExistingCheckDistributer(foundedTargetThread) {
+		if (!foundedTargetThread) return initializeThread();
+		else return foundedTargetThread;
+	}
+
+	async function addDoctorsAsContact() {
+		setProgressBarDetails({ currentStep: 2, totalStep: 3 });
+
+		console.log("LIFECYCLE", "add contact");
+
+		const contactDetailsList = doctorPhoneNumbers.map((cellphoneNumber, i) => ({
+			firstName: "دکتر",
+			lastName: `${i + 1}`,
+			cellphoneNumber,
+			typeCode: "default",
+		}));
+
+		return await promisify(resolve => {
+			(function rec(index, addedDoctorContactList) {
+				if (index < contactDetailsList.length) {
+					chatInstance.addContacts(contactDetailsList[index], result => {
+						addedDoctorContactList.push(result);
+						rec(index + 1, addedDoctorContactList);
+					});
+				} else resolve(addedDoctorContactList);
+			})(0, []);
+		});
+	}
+
+	function createThread(contacts) {
+		console.log("LIFECYCLE", "create thread with", contacts);
+
+		const threadParams = {
+			title: threadId,
+			description: threadDescription,
+			type: "NORMAL",
+			invitees: contacts.map(contact => ({
+				id: contact.id,
+				idType: "TO_BE_USER_CONTACT_ID",
+			})),
+		};
+
+		return promisify((res, rej) => {
+			chatInstance.createThread(threadParams, ({ result }) => {
+				res(result.thread);
+				setProgressBarDetails({ currentStep: 3, totalStep: 5 });
+			});
+		});
+	}
+
+	async function initializeThread() {
+		return await addDoctorsAsContact()
+			.then(function combineUserToList(allContact) {
+				return allContact.map(contactResponsePack => contactResponsePack.result.contacts[0]);
+			})
+			.then(createThread);
+	}
+
+	function finalSetThreadToStore(targetThread) {
+		setProgressBarDetails({ totalStep: 1, currentStep: 1 });
+		console.log("FINAL", targetThread);
+	}
+
+	function threadSetupFlowHandler() {
+		promiseTimeout(
+			onChatReadyHandler()
+				.then(promiseTimeout(getTargetThread, FLOW_BLOCK_TIMEOUT))
+				.then(promiseTimeout(threadExistingCheckDistributer, FLOW_BLOCK_TIMEOUT))
+				.then(finalSetThreadToStore)
+				.catch(function generalEntireFlowChainError(err) {
+					console.log(err);
+				}),
+			FLOW_BLOCK_TIMEOUT
+		).catch(function onChatFailHandler() {
+			setFlowError(TIMEOUT_ERROR_MESSAGE);
+			setProgressBarDetails({ render: false });
+		});
+	}
+
+	function retryThreadSetupHandler() {
+		setFlowError(null);
+		setProgressBarDetails({ currentStep: 1, totalStep: 3, render: true });
+		threadSetupFlowHandler();
+	}
+
+	useEffect(threadSetupFlowHandler, []);
+
+	useLayoutEffect(function initialScreenElementAnimateHelper() {
+		selfClearTimeout(() => {
+			setAnimateScreenFadeIn(true);
+		}, 10);
+
+		selfClearTimeout(function initialProgressBarShowHandler() {
+			setProgressBarDetails(prev => ({
+				...prev,
+				render: true,
+			}));
+		}, 3000);
+	}, []);
+
+	if (showSetupScreen)
+		return (
+			<StyledSetup className={`setup ${animateScreenFadeIn ? "setup--fadeIn" : ""}`}>
+				<div className="setup__container">
+					<div className="setup__iconBox">
+						<p>پاد</p>
+					</div>
+					<div className="setup__desc">
+						<p>پاد چت</p>
+						<span>ارتباطی آسان </span>
+						<span>در سایه سلامتی</span>
+						{flowError && (
+							<div className={`setup__alertContainer ${flowError ? "setup__alertContainer--show" : ""}`}>
+								<Alert>{flowError}</Alert>
+								<Button onClick={retryThreadSetupHandler}>تلاش مجدد</Button>
+							</div>
+						)}
+					</div>
+
+					<ProgressBar {...progressBarDetails} />
+				</div>
+			</StyledSetup>
+		);
+	else return children;
+};
+
+export default Setup;
