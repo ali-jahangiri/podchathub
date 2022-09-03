@@ -14,7 +14,14 @@ export const StoreContext = createContext({
 const StoreProvider = ({ children, ...restOwnerProps }) => {
 	const [store, setStore] = useState({ ownerProps: restOwnerProps });
 
-	return <StoreContext.Provider value={{ store, setStore }}>{children}</StoreContext.Provider>;
+	const changeStoreValueHandler = (key, value) => {
+		setStore(prev => ({
+			...prev,
+			[key]: value,
+		}));
+	};
+
+	return <StoreContext.Provider value={{ store, setStore: changeStoreValueHandler }}>{children}</StoreContext.Provider>;
 };
 
 export default StoreProvider;

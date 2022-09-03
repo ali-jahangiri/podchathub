@@ -3,6 +3,9 @@ import WrapWithStyled from "utils/WrapWithStyled";
 
 const StyledSetup = WrapWithStyled("div", theme => ({
 	base: css`
+		transition: ${theme.animateDuration.fast};
+		opacity: 1;
+
 		.setup {
 			&__container {
 				position: fixed;
@@ -91,6 +94,10 @@ const StyledSetup = WrapWithStyled("div", theme => ({
 		}
 
 		&.setup {
+			&--fadeOut {
+				opacity: 0;
+			}
+
 			&--fadeIn {
 				.setup {
 					&__iconBox {
