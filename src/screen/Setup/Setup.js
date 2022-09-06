@@ -9,10 +9,10 @@ import promiseTimeout from "utils/promiseTimeout";
 import promisify from "utils/promisify";
 import selfClearTimeout from "utils/selfClearTimeout";
 import StyledSetup from "./setup.style";
-import { FLOW_BLOCK_TIMEOUT, TIMEOUT_ERROR_MESSAGE } from "../../static/setup";
+import { FLOW_BLOCK_TIMEOUT, TIMEOUT_ERROR_MESSAGE } from "../../static/setupKeys";
 
 const Setup = ({ children }) => {
-	const [showSetupScreen, setShowSetupScreen] = useState(false);
+	const [showSetupScreen, setShowSetupScreen] = useState(true);
 	const [progressBarDetails, setProgressBarDetails] = useState({
 		totalStep: 3,
 		currentStep: 0,
@@ -29,30 +29,36 @@ const Setup = ({ children }) => {
 		ownerProps: { threadId, doctorPhoneNumbers, threadDescription },
 	} = store;
 
-	const onChatReadyHandler = () =>
-		promisify((res, rej) => {
+	function onChatReadyHandler() {
+		return promisify((res, rej) => {
 			console.log("LIFECYCLE", "chat ready");
 			chatInstance.on("chatReady", onReadyError => {
 				if (!onReadyError) res();
 				rej();
 			});
 		});
+	}
 
-	const getTargetThread = () =>
-		promisify((res, rej) => {
+	function getTargetThread() {
+		return promisify((res, rej) => {
 			console.log("LIFECYCLE", "get target thread");
-			chatInstance.getThreads({ threadName: threadId }, ({ result }) => {
-				res(result.threads[0]);
-				setProgressBarDetails({ currentStep: 1, totalStep: 3 });
+			chatInstance.getThreads({ threadName: threadId }, response => {
+				if (response.hasError) rej(response.errorMessage);
+				else {
+					res(response.result.threads[0]);
+					setProgressBarDetails({ currentStep: 1, totalStep: 3 });
+				}
 			});
 		});
+	}
 
 	function threadExistingCheckDistributer(foundedTargetThread) {
 		if (!foundedTargetThread) return initializeThread();
 		else return foundedTargetThread;
 	}
 
-	async function addDoctorsAsContact() {
+	async function addProvidersAsContact() {
+		// provider essentials mean doctors and nurses
 		setProgressBarDetails({ currentStep: 2, totalStep: 3 });
 
 		console.log("LIFECYCLE", "add contact");
@@ -98,7 +104,8 @@ const Setup = ({ children }) => {
 	}
 
 	async function initializeThread() {
-		return await addDoctorsAsContact()
+		console.log("sd");
+		return await addProvidersAsContact()
 			.then(function combineUserToList(allContact) {
 				return allContact.map(contactResponsePack => contactResponsePack.result.contacts[0]);
 			})
@@ -115,15 +122,27 @@ const Setup = ({ children }) => {
 		});
 	}
 
-	function finalSetThreadToStore({ thread, initialHistory }) {
+	function getCurrentPatientUserDetails(passedDetails) {
+		// get full details of owner of TOKEN and who was enter inside the app as "patient"
+		return promisify(res => {
+			chatInstance.getUserInfo(({ result }) => {
+				res({ ...passedDetails, user: result.user });
+			});
+		});
+	}
+
+	function finalSetThreadToStore({ thread, initialHistory, user }) {
 		console.log("LIFECYCLE", "FINAL");
+		setStore(prev => ({
+			...prev,
+			thread,
+			user,
+			initialMessageHistory: initialHistory,
+		}));
 		setProgressBarDetails({ totalStep: 1, currentStep: 1 });
-		setStore("thread", thread);
-		setStore("initialMessageHistory", initialHistory);
+
 		setAnimateScreenFadeOut(true);
-		selfClearTimeout(() => {
-			setShowSetupScreen(false);
-		}, 200); // 200ms come from token.animateDuration.fast
+		selfClearTimeout(() => setShowSetupScreen(false), 200); // 200ms come from token.animateDuration.fast
 	}
 
 	function threadSetupFlowHandler() {
@@ -132,9 +151,11 @@ const Setup = ({ children }) => {
 				.then(getTargetThread)
 				.then(threadExistingCheckDistributer)
 				.then(getThreadMessageHistory)
+				.then(getCurrentPatientUserDetails)
 				.then(finalSetThreadToStore)
 				.catch(function generalEntireFlowChainError(err) {
-					console.log(err);
+					setFlowError(err);
+					setProgressBarDetails({ render: false });
 				}),
 			FLOW_BLOCK_TIMEOUT
 		).catch(function onChatFailHandler() {

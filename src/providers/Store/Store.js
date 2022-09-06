@@ -15,10 +15,13 @@ const StoreProvider = ({ children, ...restOwnerProps }) => {
 	const [store, setStore] = useState({ ownerProps: restOwnerProps });
 
 	const changeStoreValueHandler = (key, value) => {
-		setStore(prev => ({
-			...prev,
-			[key]: value,
-		}));
+		// in case when want to pass callback to setState to overwrite entire store
+		if (typeof key === "function") setStore(key);
+		else
+			setStore(prev => ({
+				...prev,
+				[key]: value,
+			}));
 	};
 
 	return <StoreContext.Provider value={{ store, setStore: changeStoreValueHandler }}>{children}</StoreContext.Provider>;

@@ -3,11 +3,11 @@ import WrapWithStyled from "utils/WrapWithStyled";
 
 const animateNewMessageGrow = keyframes`
 	from {
-		height: 0px;
+		max-height: 0px;
 	}
 
 	to {
-		height: 200px;
+		max-height: 200px;
 	}
 `;
 
@@ -15,8 +15,8 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 	base: css`
 		margin: ${theme.space[5]} 0;
 		margin-top: ${theme.space[8]};
+		transition: ${theme.animateDuration.fast};
 
-		&.messageItem,
 		.messageItem {
 			&__box {
 				display: flex;
@@ -49,7 +49,9 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 					color: ${theme.colors.pallet.natural[6]};
 				}
 			}
+		}
 
+		&.messageItem {
 			&--owner {
 				.messageItem {
 					&__avatar {
@@ -68,6 +70,13 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 						border-radius: ${theme.radius[6]} 0 ${theme.radius[6]} ${theme.radius[6]};
 					}
 				}
+			}
+
+			&--new {
+				animation: ${animateNewMessageGrow} ${theme.animateDuration.slow} forwards alternate
+					cubic-bezier(0.755, 0.05, 0.855, 0.06);
+
+				opacity: 0.8;
 			}
 
 			&--clinic {
@@ -110,11 +119,6 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 						margin-left: ${theme.space[18]};
 					}
 				}
-			}
-
-			&--new {
-				animation: ${animateNewMessageGrow} ${theme.animateDuration.slow} forwards alternate
-					cubic-bezier(0.755, 0.05, 0.855, 0.06);
 			}
 		}
 	`,

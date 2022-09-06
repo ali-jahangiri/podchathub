@@ -13,7 +13,7 @@ const SendIcon = () => (
 	</svg>
 );
 
-const MessageInput = ({ onSendMessage }) => {
+const MessageInput = ({ onTextMessageSend, onMediaMessageSend }) => {
 	const [inputValue, setInputValue] = useState("");
 	const textareaRef = useRef();
 
@@ -35,7 +35,7 @@ const MessageInput = ({ onSendMessage }) => {
 	};
 
 	const sendMessageHandler = () => {
-		onSendMessage(inputValue);
+		onTextMessageSend(inputValue);
 		focusOnTextareaHandler();
 	};
 
@@ -46,6 +46,7 @@ const MessageInput = ({ onSendMessage }) => {
 			<div className="messageInput__innerContainer">
 				<Emoji />
 				<TextareaAutosize
+					autoFocus
 					ref={textareaRef}
 					cacheMeasurements
 					placeholder="پیامی بنویسید..."

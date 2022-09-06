@@ -1,6 +1,6 @@
+import { createContext, useMemo } from "react";
 import useStore from "hooks/useStore/useStore";
 import ChatConstructors from "podchat-browser";
-import { createContext, useMemo } from "react";
 
 export const PodSdkContext = createContext({});
 
@@ -36,6 +36,14 @@ const PodSdkProvider = ({ children }) => {
 				callAudioTagClassName: "podcall-audio",
 				callVideoTagClassName: "podcall-video",
 			},
+
+			// MAIN
+			socketAddress: "wss://msg.pod.ir/ws",
+			ssoHost: "https://accounts.pod.ir",
+			platformHost: "https://api.pod.ir/srv/core",
+			fileServer: "https://core.pod.ir",
+			podSpaceFileServer: "https://podspace.pod.ir",
+			serverName: "chat-server",
 		};
 
 		return new ChatConstructors(chatConfig);
