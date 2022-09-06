@@ -52,7 +52,7 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 		}
 
 		&.messageItem {
-			&--owner {
+			&--author {
 				.messageItem {
 					&__avatar {
 						margin-left: ${theme.space[5]};
@@ -79,7 +79,7 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 				opacity: 0.8;
 			}
 
-			&--clinic {
+			&--provider {
 				.messageItem {
 					&__avatar {
 						margin-right: ${theme.space[5]};

@@ -1,10 +1,9 @@
 import Avatar from "components/Avatar/Avatar";
 import { useEffect, useState } from "react";
 import usePodSdk from "../../../hooks/usePodSdk/usePodSdk";
-import promisify from "../../../utils/promisify";
 import StyledMessageItem from "./messageItem.style";
 
-const MessageItem = ({ time, source, type, message, author, haveToRenderBasicDetails, asNew, threadId }) => {
+const MessageItem = ({ time, source, type, message, author, haveToRenderBasicDetails, asNew, threadId, edited }) => {
 	const [messageStatus, setMessageStatus] = useState(asNew ? "new" : null);
 
 	const chatInstance = usePodSdk();
@@ -21,7 +20,7 @@ const MessageItem = ({ time, source, type, message, author, haveToRenderBasicDet
 
 				chatInstance.sendTextMessage(messageParam, {
 					onSent: function (result) {
-						console.log();
+						console.log(result);
 						setMessageStatus("send");
 					},
 					onDeliver: function (result) {},

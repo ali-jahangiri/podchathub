@@ -5,30 +5,30 @@ import MessageList from "components/Message/List/MessageList";
 import MessageInput from "components/MessageInput";
 import StyledRoom from "./room.style";
 import useStore from "../../hooks/useStore/useStore";
-import usePodSdk from "../../hooks/usePodSdk/usePodSdk";
 import selfClearTimeout from "../../utils/selfClearTimeout";
 import useRoomObserver from "../../hooks/useRoomObserver/useRoomObserver";
+import transformMessageItem from "../../utils/transformMessageItem";
 
 const Room = () => {
 	const [store] = useStore();
-	const chatInstance = usePodSdk();
-
-	useRoomObserver({
-		onNewMessage(result) {
-			console.log(result);
-		},
-	});
 
 	const [messageItems, setMessageItems] = useState([]);
 	const messageListContainerRef = useRef();
+
+	useRoomObserver({
+		onNewMessage({ result }) {
+			console.log(result, "come");
+		},
+	});
 
 	function addTextMessage(message) {
 		const newTextMessage = {
 			asNew: true,
 			source: "owner",
-			author: "علی",
+			author: "شما",
 			message,
-			type: "text",
+			type: 0,
+			time: Date.now(),
 		};
 
 		setMessageItems(prev => [...prev, newTextMessage]);
@@ -56,7 +56,12 @@ const Room = () => {
 
 	// remove this (TEST PURPOSE)
 	useEffect(() => {
-		setMessageItems(store?.initialMessageHistory?.history);
+		console.log(store);
+		if (store?.initialMessageHistory?.history) {
+			const sad = transformMessageItem(store?.initialMessageHistory?.history, { authorId: store?.user?.id });
+			console.log(sad);
+			setMessageItems(sad);
+		}
 	}, [store]);
 
 	return (

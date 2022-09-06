@@ -1,12 +1,17 @@
 import { ThemeProvider } from "styled-components";
-import useThemePersis from "hooks/useThemePersist";
+import dayjs from "dayjs";
+import jalaliday from "jalaliday";
 
+import useThemePersis from "hooks/useThemePersist";
 import Room from "screen/Room/Room";
 import StyleResetter from "providers/StyleResetter";
 import BaseStyle from "providers/BaseStyle";
 import PodSdkProvider from "providers/PodSdk/PodSdkProvider";
 import StoreProvider from "providers/Store";
 import Setup from "screen/Setup";
+
+// setup dayjs for entire app runtime
+dayjs.extend(jalaliday);
 
 function App({ token, threadId, doctorPhoneNumbers, threadDescription }) {
 	const [theme] = useThemePersis();
