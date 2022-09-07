@@ -4,7 +4,7 @@ import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const token = "9ceee5f01f77479cb21e1e86299e5de1.XzIwMjI5";
+const token = "2240140b2b844ba59ad627386505939e.XzIwMjI5";
 const targetThreadId = "THREAD_ID_8";
 const targetThreadDescription = "خدمت درمانی ۱";
 const friendsPhoneNumber = ["09917240664", "09126930749"];

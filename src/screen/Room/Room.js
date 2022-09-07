@@ -36,6 +36,7 @@ const Room = () => {
 			if (!omitTheAuthorMessageAdding(result.message.participant.id, user.id)) {
 				const finalIncomingMessage = compose(convertDataProperly, extractOnlyNeededProperly)(result.message);
 				setMessageItems(prev => [...prev, finalIncomingMessage]);
+				selfClearTimeout(() => scrollToBottomHandler("smooth"), 10);
 			}
 		},
 	});
@@ -80,12 +81,7 @@ const Room = () => {
 		<StyledRoom>
 			<Container>
 				<Header />
-				<MessageList
-					// IMPORTANT REMOVE OPTIONAL CHAIN BECAUSE WE CANNOT HANDLE THIS CASE
-					threadId={store?.thread?.id}
-					items={messageItems}
-					containerRef={messageListContainerRef}
-				/>
+				<MessageList threadId={store.thread.id} items={messageItems} containerRef={messageListContainerRef} />
 				<MessageInput onTextMessageSend={addTextMessage} />
 			</Container>
 		</StyledRoom>
