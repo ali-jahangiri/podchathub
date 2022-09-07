@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Container from "components/Container";
 import Header from "components/Header";
 import MessageList from "components/Message/List/MessageList";
@@ -7,31 +7,53 @@ import StyledRoom from "./room.style";
 import useStore from "../../hooks/useStore/useStore";
 import selfClearTimeout from "../../utils/selfClearTimeout";
 import useRoomObserver from "../../hooks/useRoomObserver/useRoomObserver";
-import transformMessageItem from "../../utils/transformMessageItem";
+import transformMessageItem, {
+	convertDataProperly,
+	extractOnlyNeededProperly,
+	MessageSchema,
+} from "../../utils/transformMessageItem";
+import date from "../../utils/date";
+import compose from "../../utils/compose";
 
 const Room = () => {
 	const [store] = useStore();
 
-	const [messageItems, setMessageItems] = useState([]);
+	const { user, initialMessageHistory } = store;
+
+	const [messageItems, setMessageItems] = useState(function getInitialMessage() {
+		return transformMessageItem(initialMessageHistory.history.reverse(), { authorId: user.id });
+	});
+
 	const messageListContainerRef = useRef();
+
+	function omitTheAuthorMessageAdding(participantId, authorId) {
+		if (participantId === authorId) return true;
+		else return false;
+	}
 
 	useRoomObserver({
 		onNewMessage({ result }) {
-			console.log(result, "come");
+			if (!omitTheAuthorMessageAdding(result.message.participant.id, user.id)) {
+				const finalIncomingMessage = compose(convertDataProperly, extractOnlyNeededProperly)(result.message);
+				setMessageItems(prev => [...prev, finalIncomingMessage]);
+			}
 		},
 	});
 
 	function addTextMessage(message) {
-		const newTextMessage = {
+		const newMessage = new MessageSchema({
 			asNew: true,
-			source: "owner",
-			author: "شما",
+			type: "text",
+			time: date(Date.now()).format("hh:mm"),
+			threadId: store.thread.id,
 			message,
-			type: 0,
-			time: Date.now(),
-		};
+			source: "author",
+			owner: {
+				firstName: "شما",
+			},
+		});
 
-		setMessageItems(prev => [...prev, newTextMessage]);
+		setMessageItems(prev => [...prev, newMessage]);
 		selfClearTimeout(() => scrollToBottomHandler("smooth"), 10);
 	}
 
@@ -53,16 +75,6 @@ const Room = () => {
 			messageListContainerRef.current.scrollTop = messageListContainerRef.current.scrollHeight;
 		}
 	};
-
-	// remove this (TEST PURPOSE)
-	useEffect(() => {
-		console.log(store);
-		if (store?.initialMessageHistory?.history) {
-			const sad = transformMessageItem(store?.initialMessageHistory?.history, { authorId: store?.user?.id });
-			console.log(sad);
-			setMessageItems(sad);
-		}
-	}, [store]);
 
 	return (
 		<StyledRoom>

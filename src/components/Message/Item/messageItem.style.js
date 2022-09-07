@@ -23,6 +23,14 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 				max-width: 60%;
 			}
 
+			&__time {
+				margin-top: ${theme.space[7]};
+				font-size: 0.8rem;
+				color: ${theme.colors.pallet.natural[6]};
+				padding-left: ${theme.space[8]};
+				text-align: left;
+			}
+
 			&__content {
 				padding: ${theme.space[12]};
 				display: flex;
@@ -43,10 +51,6 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 				p {
 					font-size: ${theme.fontSizes.lg};
 					color: ${theme.colors.pallet.natural[10]};
-				}
-
-				span {
-					color: ${theme.colors.pallet.natural[6]};
 				}
 			}
 		}
@@ -111,11 +115,11 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 				margin-top: ${theme.space[5]};
 
 				&.messageItem {
-					&--owner {
+					&--author {
 						margin-right: ${theme.space[18]};
 					}
 
-					&--clinic {
+					&--provider {
 						margin-left: ${theme.space[18]};
 					}
 				}

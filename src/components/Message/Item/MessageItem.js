@@ -1,5 +1,5 @@
-import Avatar from "components/Avatar/Avatar";
 import { useEffect, useState } from "react";
+import Avatar from "components/Avatar/Avatar";
 import usePodSdk from "../../../hooks/usePodSdk/usePodSdk";
 import StyledMessageItem from "./messageItem.style";
 
@@ -16,11 +16,9 @@ const MessageItem = ({ time, source, type, message, author, haveToRenderBasicDet
 					textMessage: message,
 					messageType: "TEXT",
 				};
-				console.log("ssss");
 
 				chatInstance.sendTextMessage(messageParam, {
 					onSent: function (result) {
-						console.log(result);
 						setMessageStatus("send");
 					},
 					onDeliver: function (result) {},
@@ -43,15 +41,11 @@ const MessageItem = ({ time, source, type, message, author, haveToRenderBasicDet
 					<Avatar className="messageItem__avatar" imageSource="https://faces-img.xcdn.link/image-lorem-face-6772.jpg" />
 				)}
 				<div>
-					{haveToRenderBasicDetails && (
-						<div className="messageItem__metaDetails">
-							<p>{author}</p>
-							<span>{time}</span>
-						</div>
-					)}
+					{haveToRenderBasicDetails && <div className="messageItem__metaDetails">{author}</div>}
 					<div className="messageItem__content">
 						<p>{message}</p>
 					</div>
+					<div className="messageItem__time">{time}</div>
 				</div>
 			</div>
 		</StyledMessageItem>

@@ -1,13 +1,30 @@
 import date from "./date";
 
-function extractOnlyNeededProperly({ id, threadId, ownerId, message, messageType, edited, participant, timeMiliSeconds }) {
-	return {
+export class MessageSchema {
+	constructor({ id, threadId, message, type, edited, time, source, owner, asNew }) {
+		return {
+			id,
+			threadId,
+			message,
+			type,
+			edited,
+			time,
+			source,
+			owner,
+			asNew,
+		};
+	}
+}
+
+export function extractOnlyNeededProperly({ id, threadId, ownerId, message, messageType, edited, participant, timeMiliSeconds }) {
+	return new MessageSchema({
 		id,
 		threadId,
 		message,
 		type: messageType,
 		edited,
 		time: timeMiliSeconds,
+		asNew: false,
 		source: null,
 		owner: {
 			id: ownerId,
@@ -16,7 +33,7 @@ function extractOnlyNeededProperly({ id, threadId, ownerId, message, messageType
 			lastName: participant.lastName,
 			fullName: participant.name,
 		},
-	};
+	});
 }
 
 function convertTimestampToReadableClockTime(timestamp) {
@@ -32,7 +49,7 @@ function renderFriendlyNameForAuthor(ownerId, patientId, currentFirstName) {
 	else return currentFirstName;
 }
 
-function convertDataProperly({ time, owner, ...restProperty }, authorId) {
+export function convertDataProperly({ time, owner, ...restProperty }, authorId) {
 	return {
 		...restProperty,
 		time: convertTimestampToReadableClockTime(time),
