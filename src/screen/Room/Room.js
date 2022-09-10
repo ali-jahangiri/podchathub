@@ -1,5 +1,4 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import Container from "components/Container";
 import Header from "components/Header";
 import MessageList from "components/Message/List/MessageList";
 import MessageInput from "components/MessageInput";
@@ -19,6 +18,7 @@ import date from "../../utils/date";
 import compose from "../../utils/compose";
 import getHalfOfUserViewport from "../../utils/getHalfOfUserViewport";
 import SelectedMessageController from "../../components/SelectedMessageController";
+import Container from "../../components/Container/Container";
 
 const Room = () => {
 	const [store] = useStore();
@@ -133,7 +133,7 @@ const Room = () => {
 
 	return (
 		<StyledRoom>
-			<Container>
+			<div>
 				<Header />
 				{isInFetchingMoreMessage && <LoadingMoreSpinner />}
 				<MessageList
@@ -146,15 +146,15 @@ const Room = () => {
 					selectMessageHandler={addMessageItemToSelectedItemsHandler}
 					unSelectMessageHandler={removeMessageItemFromSelectedItemsHandler}
 				/>
-				<div className="room__messageInputs">
+				<Container className="room__messageInputs">
 					<SelectedMessageController
 						onCloseHandler={makeSelectedMessageListEmpty}
 						selectedMessagesList={selectedMessagesId}
 						show={selectedMessagesId.length}
 					/>
 					<MessageInput onTextMessageSend={addTextMessage} />
-				</div>
-			</Container>
+				</Container>
+			</div>
 		</StyledRoom>
 	);
 };

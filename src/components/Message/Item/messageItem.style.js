@@ -21,7 +21,7 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 		.messageItem {
 			&__box {
 				display: flex;
-				max-width: 60%;
+				width: 100%;
 			}
 
 			&__contentRow {
@@ -55,6 +55,7 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				padding-left: ${theme.space[9]};
 			}
 
 			&__name {
@@ -133,23 +134,26 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 			&--detailsOmit {
 				margin-top: ${theme.space[5]};
 
+				.messageItem {
+					&__selectBox {
+						padding-left: ${theme.space[19]};
+					}
+				}
+
 				&.messageItem {
 					&--author {
-						margin-right: ${theme.space[18]};
+						padding-right: ${theme.space[22]};
 					}
 
 					&--provider {
-						margin-left: ${theme.space[18]};
+						padding-left: ${theme.space[22]};
 					}
 				}
 			}
 
 			&--selected {
-				padding-left: 3rem;
-				padding-right: 3rem;
-				transition: ${theme.animateDuration.fast};
-				/* exact value */
-				background-color: #e9e9e96b;
+				transition: ${theme.animateDuration.normal};
+				background-color: #e9e9e940;
 			}
 		}
 	`,

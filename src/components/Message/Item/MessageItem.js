@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Avatar from "components/Avatar/Avatar";
 import StyledMessageItem from "./messageItem.style";
 import Radio from "../../Radio/Radio";
+import Container from "../../Container/Container";
 
 const MessageItem = ({
 	id,
@@ -63,7 +64,7 @@ const MessageItem = ({
 				messageStatus ? `messageItem--${messageStatus}` : ""
 			} ${!haveToRenderBasicDetails ? "messageItem--detailsOmit" : ""}`}
 		>
-			<div className="messageItem__box">
+			<Container className="messageItem__box">
 				{haveToRenderBasicDetails && (
 					<Avatar
 						className="messageItem__avatar"
@@ -83,12 +84,12 @@ const MessageItem = ({
 						</div>
 					</div>
 				</div>
-			</div>
-			{source === "author" && (
-				<div className="messageItem__selectBox">
-					<Radio onClick={toggleSelectStatusHandler} show={isSelected} />
-				</div>
-			)}
+				{source === "author" && (
+					<div className="messageItem__selectBox">
+						<Radio onClick={toggleSelectStatusHandler} show={isSelected} />
+					</div>
+				)}
+			</Container>
 		</StyledMessageItem>
 	);
 };
