@@ -104,7 +104,6 @@ const Setup = ({ children }) => {
 	}
 
 	async function initializeThread() {
-		console.log("sd");
 		return await addProvidersAsContact()
 			.then(function combineUserToList(allContact) {
 				return allContact.map(contactResponsePack => contactResponsePack.result.contacts[0]);
@@ -116,8 +115,8 @@ const Setup = ({ children }) => {
 		// get some amount of prevues user messages history to have better ux and continue where left with no additional loading state in room screen
 		console.log("LIFECYCLE", "get initial message thread history");
 		return promisify(res => {
-			chatInstance.getHistory({ threadId: targetThread.id }, ({ result }) => {
-				res({ thread: targetThread, initialHistory: result });
+			chatInstance.getHistory({ threadId: targetThread.id }, response => {
+				res({ thread: targetThread, initialHistory: response.result });
 			});
 		});
 	}
@@ -189,7 +188,9 @@ const Setup = ({ children }) => {
 		<Fragment>
 			{showSetupScreen ? (
 				<StyledSetup
-					className={`setup ${animateScreenFadeOut ? "setup--fadeOut" : ""} ${animateScreenFadeIn ? "setup--fadeIn" : ""}`}
+					className={`setup ${animateScreenFadeOut ? "setup--fadeOut" : ""} ${
+						animateScreenFadeIn ? "setup--fadeIn" : ""
+					}`}
 				>
 					<div className="setup__container">
 						<div className="setup__iconBox">
@@ -200,7 +201,11 @@ const Setup = ({ children }) => {
 							<span>ارتباطی آسان </span>
 							<span>در سایه سلامتی</span>
 							{flowError && (
-								<div className={`setup__alertContainer ${flowError ? "setup__alertContainer--show" : ""}`}>
+								<div
+									className={`setup__alertContainer ${
+										flowError ? "setup__alertContainer--show" : ""
+									}`}
+								>
 									<Alert>{flowError}</Alert>
 									<Button onClick={retryThreadSetupHandler}>تلاش مجدد</Button>
 								</div>

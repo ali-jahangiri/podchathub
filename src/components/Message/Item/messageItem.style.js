@@ -16,6 +16,7 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 		margin: ${theme.space[5]} 0;
 		margin-top: ${theme.space[8]};
 		transition: ${theme.animateDuration.fast};
+		display: flex;
 
 		.messageItem {
 			&__box {
@@ -23,16 +24,22 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 				max-width: 60%;
 			}
 
+			&__contentRow {
+				display: flex;
+			}
+
 			&__time {
-				margin-top: ${theme.space[7]};
+				padding-right: ${theme.space[7]};
+				padding-left: ${theme.space[7]};
+				margin-top: auto;
 				font-size: 0.8rem;
 				color: ${theme.colors.pallet.natural[6]};
-				padding-left: ${theme.space[8]};
-				text-align: left;
+				cursor: pointer;
+				user-select: none;
 			}
 
 			&__content {
-				padding: ${theme.space[12]};
+				padding: ${theme.space[11]} ${theme.space[12]};
 				display: flex;
 				align-items: center;
 				line-height: ${theme.lineHeights[7]};
@@ -43,10 +50,18 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 				flex-shrink: 0;
 			}
 
-			&__metaDetails {
+			&__selectBox {
+				margin-right: auto;
 				display: flex;
 				align-items: center;
-				margin-bottom: ${theme.space[5]};
+				justify-content: center;
+			}
+
+			&__name {
+				display: flex;
+				align-items: center;
+				margin-bottom: ${theme.space[8]};
+				color: ${theme.colors.pallet.natural[10]};
 
 				p {
 					font-size: ${theme.fontSizes.lg};
@@ -62,7 +77,7 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 						margin-left: ${theme.space[5]};
 					}
 
-					&__metaDetails {
+					&__name {
 						p {
 							margin-left: ${theme.space[5]};
 						}
@@ -89,7 +104,11 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 						margin-right: ${theme.space[5]};
 					}
 
-					&__metaDetails {
+					&__contentRow {
+						flex-direction: row-reverse;
+					}
+
+					&__name {
 						flex-direction: row-reverse;
 						justify-content: flex-start;
 
@@ -123,6 +142,14 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 						margin-left: ${theme.space[18]};
 					}
 				}
+			}
+
+			&--selected {
+				padding-left: 3rem;
+				padding-right: 3rem;
+				transition: ${theme.animateDuration.fast};
+				/* exact value */
+				background-color: #e9e9e96b;
 			}
 		}
 	`,

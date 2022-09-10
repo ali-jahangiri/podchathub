@@ -24,7 +24,11 @@ const StoreProvider = ({ children, ...restOwnerProps }) => {
 			}));
 	};
 
-	return <StoreContext.Provider value={{ store, setStore: changeStoreValueHandler }}>{children}</StoreContext.Provider>;
+	return (
+		<StoreContext.Provider value={{ store, setStore: changeStoreValueHandler }}>
+			{children}
+		</StoreContext.Provider>
+	);
 };
 
 export default StoreProvider;

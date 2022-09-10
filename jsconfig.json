@@ -2,10 +2,16 @@
 	"compilerOptions": {
 		"baseUrl": "src",
 		"target": "es5",
-		"lib": ["dom", "dom.iterable", "esnext"],
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"esnext"
+		],
 		"module": "esnext",
 		"jsx": "react-jsx",
 		"isolatedModules": true
 	},
-	"include": ["public/src"]
+	"include": [
+		"public/src"
+	]
 }

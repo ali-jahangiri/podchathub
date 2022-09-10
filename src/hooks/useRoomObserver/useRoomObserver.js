@@ -1,15 +1,19 @@
 import { useEffect } from "react";
 import usePodSdk from "../usePodSdk/usePodSdk";
 
-const LISTENER_MESSAGE_NEW = "messageEvents";
-
-function useRoomObserver({ onNewMessage }) {
+function useRoomObserver({
+	listeners: { onNewMessage, onReachToTopOfListContainer },
+	config: { containerRef },
+}) {
 	const chatInstance = usePodSdk();
 
-	useEffect(function settleListenersHandler() {
-		chatInstance.on(LISTENER_MESSAGE_NEW, onNewMessage);
+	useEffect(
+		function settleListenersHandler() {
+			chatInstance.on("messageEvents", onNewMessage);
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		[]
+	);
 }
 
 export default useRoomObserver;

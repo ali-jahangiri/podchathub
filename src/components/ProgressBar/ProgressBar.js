@@ -16,7 +16,10 @@ const ProgressBar = ({ totalStep, currentStep, render = false }) => {
 			<div className="progressBar__container">
 				<p className="progressBar__title">{animateFadeIn}</p>
 				<div className="progressBar__bar">
-					<div style={{ width: `${(currentStep / totalStep) * 100}%` }} className="progressBar__progress" />
+					<div
+						style={{ width: `${(currentStep / totalStep) * 100}%` }}
+						className="progressBar__progress"
+					/>
 				</div>
 			</div>
 		</StyledProgressBar>

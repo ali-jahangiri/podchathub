@@ -17,6 +17,11 @@ const StyledRoom = WrapWithStyled("div", theme => ({
 				display: flex;
 				flex-direction: column;
 			}
+
+			&__messageInputs {
+				width: 100%;
+				position: relative;
+			}
 		}
 	`,
 }));

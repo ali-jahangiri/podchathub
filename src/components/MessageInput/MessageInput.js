@@ -35,8 +35,12 @@ const MessageInput = ({ onTextMessageSend, onMediaMessageSend }) => {
 	};
 
 	const sendMessageHandler = () => {
-		onTextMessageSend(inputValue);
-		focusOnTextareaHandler();
+		const trimmedInputValue = inputValue.trim();
+
+		if (trimmedInputValue) {
+			onTextMessageSend(trimmedInputValue);
+			focusOnTextareaHandler();
+		}
 	};
 
 	const focusOnTextareaHandler = () => textareaRef.current.focus();
@@ -57,7 +61,11 @@ const MessageInput = ({ onTextMessageSend, onMediaMessageSend }) => {
 				/>
 				<AttachFile />
 			</div>
-			<button disabled={!inputValue} onClick={onSendTriggerClickHandler} className="messageInput__sendTrigger">
+			<button
+				disabled={!inputValue}
+				onClick={onSendTriggerClickHandler}
+				className="messageInput__sendTrigger"
+			>
 				<SendIcon />
 			</button>
 		</StyledMessageInput>

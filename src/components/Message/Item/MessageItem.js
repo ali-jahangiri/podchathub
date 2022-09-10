@@ -1,12 +1,25 @@
 import { useEffect, useState } from "react";
 import Avatar from "components/Avatar/Avatar";
-import usePodSdk from "../../../hooks/usePodSdk/usePodSdk";
 import StyledMessageItem from "./messageItem.style";
+import Radio from "../../Radio/Radio";
 
-const MessageItem = ({ time, source, type, message, author, haveToRenderBasicDetails, asNew, threadId, edited }) => {
+const MessageItem = ({
+	id,
+	time,
+	source,
+	type,
+	message,
+	owner,
+	haveToRenderBasicDetails,
+	asNew,
+	threadId,
+	edited,
+	isSelected,
+	chatInstance,
+	selectHandler,
+	unSelectHandler,
+}) => {
 	const [messageStatus, setMessageStatus] = useState(asNew ? "new" : null);
-
-	const chatInstance = usePodSdk();
 
 	useEffect(
 		function sendMessageInParallel() {
@@ -30,24 +43,52 @@ const MessageItem = ({ time, source, type, message, author, haveToRenderBasicDet
 		[asNew]
 	);
 
+	function toggleSelectStatusHandler() {
+		if (source === "author") {
+			if (!isSelected) selectHandler(id);
+			else unSelectHandler(id);
+		}
+	}
+
+	useEffect(
+		function changeMessageStatusBaseOnSelectChange() {
+			setMessageStatus(isSelected ? "selected" : null);
+		},
+		[isSelected]
+	);
+
 	return (
 		<StyledMessageItem
-			className={`messageItem--${source} ${messageStatus ? `messageItem--${messageStatus}` : ""} ${
-				!haveToRenderBasicDetails ? "messageItem--detailsOmit" : ""
-			}`}
+			className={`messageItem--${source} ${
+				messageStatus ? `messageItem--${messageStatus}` : ""
+			} ${!haveToRenderBasicDetails ? "messageItem--detailsOmit" : ""}`}
 		>
 			<div className="messageItem__box">
 				{haveToRenderBasicDetails && (
-					<Avatar className="messageItem__avatar" imageSource="https://faces-img.xcdn.link/image-lorem-face-6772.jpg" />
+					<Avatar
+						className="messageItem__avatar"
+						imageSource="https://faces-img.xcdn.link/image-lorem-face-6772.jpg"
+					/>
 				)}
 				<div>
-					{haveToRenderBasicDetails && <div className="messageItem__metaDetails">{author}</div>}
-					<div className="messageItem__content">
-						<p>{message}</p>
+					{haveToRenderBasicDetails && source !== "author" && (
+						<div className="messageItem__name">{owner?.firstName}</div>
+					)}
+					<div className="messageItem__contentRow">
+						<div className="messageItem__content">
+							<p>{message}</p>
+						</div>
+						<div onClick={toggleSelectStatusHandler} className="messageItem__time">
+							{time}
+						</div>
 					</div>
-					<div className="messageItem__time">{time}</div>
 				</div>
 			</div>
+			{source === "author" && (
+				<div className="messageItem__selectBox">
+					<Radio onClick={toggleSelectStatusHandler} show={isSelected} />
+				</div>
+			)}
 		</StyledMessageItem>
 	);
 };

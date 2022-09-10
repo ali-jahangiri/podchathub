@@ -86,21 +86,39 @@ const AttachFile = () => {
 				hidden
 				type="file"
 			/>
-			<input accept=".pdf,.doc" onChange={docInputChangeHandler} ref={docInputRef} hidden type="file" />
+			<input
+				accept=".pdf,.doc"
+				onChange={docInputChangeHandler}
+				ref={docInputRef}
+				hidden
+				type="file"
+			/>
 			<button
-				className={`attacheFile__trigger ${isPopoverOpen ? "attacheFile__trigger--active" : ""}`}
+				className={`attacheFile__trigger ${
+					isPopoverOpen ? "attacheFile__trigger--active" : ""
+				}`}
 				onClick={togglePopoverStatusHandler}
 			>
 				<ClipIcon />
 			</button>
 			{haveToRenderPopover && (
-				<div className={`attacheFile__popover ${isPopoverOpen ? "attacheFile__popover--show" : ""}`}>
+				<div
+					className={`attacheFile__popover ${
+						isPopoverOpen ? "attacheFile__popover--show" : ""
+					}`}
+				>
 					<div className="attacheFile__itemContainer">
-						<button onClick={() => triggerFileInputHandler(docInputRef.current)} className="attacheFile__item">
+						<button
+							onClick={() => triggerFileInputHandler(docInputRef.current)}
+							className="attacheFile__item"
+						>
 							اسناد
 							<DocIcon />
 						</button>
-						<button onClick={() => triggerFileInputHandler(mediaInputRef.current)} className="attacheFile__item">
+						<button
+							onClick={() => triggerFileInputHandler(mediaInputRef.current)}
+							className="attacheFile__item"
+						>
 							مدیا
 							<ImgIcon />
 						</button>

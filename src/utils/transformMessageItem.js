@@ -16,7 +16,16 @@ export class MessageSchema {
 	}
 }
 
-export function extractOnlyNeededProperly({ id, threadId, ownerId, message, messageType, edited, participant, timeMiliSeconds }) {
+export function extractOnlyNeededProperly({
+	id,
+	threadId,
+	ownerId,
+	message,
+	messageType,
+	edited,
+	participant,
+	timeMiliSeconds,
+}) {
 	return new MessageSchema({
 		id,
 		threadId,
@@ -61,8 +70,15 @@ export function convertDataProperly({ time, owner, ...restProperty }, authorId) 
 	};
 }
 
+export function omitTheAuthorMessageAdding(participantId, authorId) {
+	if (participantId === authorId) return true;
+	else return false;
+}
+
 function transformMessageItem(messageList = [], { authorId }) {
-	return messageList.map(extractOnlyNeededProperly).map(message => convertDataProperly(message, authorId));
+	return messageList
+		.map(extractOnlyNeededProperly)
+		.map(message => convertDataProperly(message, authorId));
 }
 
 export default transformMessageItem;
