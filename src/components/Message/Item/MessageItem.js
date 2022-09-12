@@ -32,9 +32,7 @@ const MessageItem = ({
 				};
 
 				chatInstance.sendTextMessage(messageParam, {
-					onSent: function (result) {
-						// setMessageStatus(prev => [...prev, "send"]);
-					},
+					onSent: () => setMessageStatus(prev => [...prev, "send"]),
 				});
 			}
 		},

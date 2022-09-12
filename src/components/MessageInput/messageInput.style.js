@@ -8,6 +8,14 @@ const StyledMessageInput = WrapWithStyled("div", theme => ({
 		position: relative;
 		z-index: 9;
 
+		[contenteditable="true"]:empty:before {
+			content: attr(placeholder);
+			color: ${theme.colors.pallet.natural[8]};
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
 		.messageInput {
 			&__innerContainer {
 				background: ${theme.colors.pallet.natural[2]};
@@ -21,13 +29,19 @@ const StyledMessageInput = WrapWithStyled("div", theme => ({
 				font-family: ${theme.fonts.primary};
 				font-size: ${theme.fontSizes.lg};
 				background: transparent;
-				border: none;
-				resize: none;
-				overflow-y: hidden;
 				padding: 16px;
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				max-height: 300px;
 
 				&:focus {
 					outline: none;
+				}
+
+				/* emoji image sizes */
+				img {
+					width: 3.4rem;
 				}
 			}
 

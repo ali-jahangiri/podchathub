@@ -4,11 +4,13 @@ import WrapWithStyled from "utils/WrapWithStyled";
 const StyledEmoji = WrapWithStyled("div", theme => ({
 	base: css`
 		position: relative;
+		display: flex;
+		align-items: center;
 
 		.emoji {
 			&__trigger {
 				width: 70px;
-				height: 100%;
+				height: 60px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -29,8 +31,8 @@ const StyledEmoji = WrapWithStyled("div", theme => ({
 				/* mimicking small icon background */
 				&::after {
 					content: "";
-					width: 60%;
-					height: 65%;
+					width: 45px;
+					height: 45px;
 					background: transparent;
 					position: absolute;
 					left: 50%;

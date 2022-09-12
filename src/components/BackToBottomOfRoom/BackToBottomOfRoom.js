@@ -8,6 +8,7 @@ const DownIcon = () => (
 
 const BackToBottomOfRoom = ({ show, onClick }) => (
 	<StyledBackToButtonOfRoom id="test" show={show} onClick={onClick}>
+		{console.log(show, "show")}
 		بازگشت به پایین
 		<DownIcon />
 	</StyledBackToButtonOfRoom>

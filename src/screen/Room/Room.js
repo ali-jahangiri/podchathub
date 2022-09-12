@@ -28,7 +28,7 @@ const Room = () => {
 	const [isInFetchingMoreMessage, setIsInFetchingMoreMessage] = useState(false);
 	const [selectedMessagesId, setSelectedMessagesId] = useState([]);
 	const [messageItems, setMessageItems] = useState(getInitialMessage);
-	const [showComeBackToBottomAction, setShowComeBackToBottomAction] = useState(false);
+	const [showComeBackToBottomAction, setShowComeBackToBottomAction] = useState(true);
 	const [currentMessageOffset, setCurrentMessageOffset] = useState(
 		() => store.initialMessageHistory.nextOffset
 	);
@@ -57,6 +57,10 @@ const Room = () => {
 
 		setMessageItems(prev => [newMessage, ...prev]);
 		selfClearTimeout(scrollToBottomHandler, 250);
+	}
+
+	function addEmojiMessage(emojiNameList) {
+		console.log(emojiNameList);
 	}
 
 	const scrollToBottomHandler = (behavior = "smooth") => {
@@ -162,7 +166,7 @@ const Room = () => {
 				/>
 				<Container className="room__messageInputs">
 					<BackToBottomOfRoom
-						show={!showComeBackToBottomAction}
+						show={!showComeBackToBottomAction && messageItems.length}
 						onClick={() => scrollToBottomHandler()}
 					/>
 					<SelectedMessageController
@@ -171,7 +175,10 @@ const Room = () => {
 						selectedMessagesList={selectedMessagesId}
 						show={selectedMessagesId.length}
 					/>
-					<MessageInput onTextMessageSend={addTextMessage} />
+					<MessageInput
+						onEmojiMessageSend={addEmojiMessage}
+						onTextMessageSend={addTextMessage}
+					/>
 				</Container>
 			</div>
 		</StyledRoom>

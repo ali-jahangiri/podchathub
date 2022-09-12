@@ -99,6 +99,10 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 				opacity: 0.8;
 			}
 
+			&--send {
+				opacity: 1;
+			}
+
 			&--provider {
 				.messageItem {
 					&__avatar {
