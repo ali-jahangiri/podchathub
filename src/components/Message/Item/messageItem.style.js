@@ -14,7 +14,7 @@ const animateNewMessageGrow = keyframes`
 const StyledMessageItem = WrapWithStyled("div", theme => ({
 	base: css`
 		margin: ${theme.space[5]} 0;
-		margin-top: ${theme.space[8]};
+		margin-bottom: ${theme.space[8]};
 		transition: ${theme.animateDuration.fast};
 		display: flex;
 

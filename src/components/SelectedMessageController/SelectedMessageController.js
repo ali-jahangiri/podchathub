@@ -15,28 +15,27 @@ const TrashIcon = () => (
 	</svg>
 );
 
-const SelectedMessageController = ({ selectedMessagesList = [], show, onCloseHandler }) => {
-	function deleteMessagesHandler() {
-		console.log("delete");
-	}
-
-	return (
-		<StyledSelectedMessageController
-			className={`messageController ${show ? "messageController--show" : ""}`}
-		>
-			<Container className="messageController__container">
-				<div onClick={onCloseHandler} className="messageController__closeTrigger">
-					<CloseIcon />
-				</div>
-				<div className="messageController__title">
-					{selectedMessagesList.length} پیام انتخاب شده
-				</div>
-				<div onClick={deleteMessagesHandler} className="messageController__deleteTrigger">
-					<TrashIcon />
-				</div>
-			</Container>
-		</StyledSelectedMessageController>
-	);
-};
+const SelectedMessageController = ({
+	selectedMessagesList = [],
+	show,
+	onCloseHandler,
+	onDeleteHandier,
+}) => (
+	<StyledSelectedMessageController
+		className={`messageController ${show ? "messageController--show" : ""}`}
+	>
+		<Container className="messageController__container">
+			<div onClick={onCloseHandler} className="messageController__closeTrigger">
+				<CloseIcon />
+			</div>
+			<div className="messageController__title">
+				{selectedMessagesList.length} پیام انتخاب شده
+			</div>
+			<div onClick={onDeleteHandier} className="messageController__deleteTrigger">
+				<TrashIcon />
+			</div>
+		</Container>
+	</StyledSelectedMessageController>
+);
 
 export default SelectedMessageController;

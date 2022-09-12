@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Header from "components/Header";
 import MessageList from "components/Message/List/MessageList";
 import MessageInput from "components/MessageInput";
@@ -16,12 +16,13 @@ import transformMessageItem, {
 } from "../../utils/transformMessageItem";
 import date from "../../utils/date";
 import compose from "../../utils/compose";
-import getHalfOfUserViewport from "../../utils/getHalfOfUserViewport";
 import SelectedMessageController from "../../components/SelectedMessageController";
 import Container from "../../components/Container/Container";
+import usePodSdk from "../../hooks/usePodSdk";
 
 const Room = () => {
 	const [store] = useStore();
+	const chatInstance = usePodSdk();
 
 	// Room internal stats
 	const [isInFetchingMoreMessage, setIsInFetchingMoreMessage] = useState(false);
@@ -36,7 +37,7 @@ const Room = () => {
 	const messageListContainerRef = useRef();
 
 	function getInitialMessage() {
-		return transformMessageItem(store.initialMessageHistory.history.reverse(), {
+		return transformMessageItem(store.initialMessageHistory.history, {
 			authorId: store.user.id,
 		});
 	}
@@ -54,7 +55,7 @@ const Room = () => {
 			},
 		});
 
-		setMessageItems(prev => [...prev, newMessage]);
+		setMessageItems(prev => [newMessage, ...prev]);
 		selfClearTimeout(() => scrollToBottomHandler("smooth"), 10);
 	}
 
@@ -83,25 +84,28 @@ const Room = () => {
 
 	function onReachToTopOfListContainer() {
 		if (!isInFetchingMoreMessage) {
-			// setIsInFetchingMoreMessage(true);
-			// chatInstance.getHistory(
-			// 	{ threadId: store.thread.id, count: 50, offset: currentMessageOffset },
-			// 	response => {
-			// 		console.log(response);
-			// 		if (response.result.hasNext) {
-			// 			setMessageItems(prev => [
-			// 				...transformMessageItem(response.result.history.reverse(), {
-			// 					authorId: user.id,
-			// 				}),
-			// 				...prev,
-			// 			]);
-			// 			setCurrentMessageOffset(response.nextOffset);
-			// 			setIsInFetchingMoreMessage(false);
-			// 		}
-			// 	}
-			// );
+			setIsInFetchingMoreMessage(true);
+
+			chatInstance.getHistory(
+				{ threadId: store.thread.id, count: 50, offset: currentMessageOffset },
+				({ result }) => {
+					console.log(result);
+					if (result.hasNext) {
+						setMessageItems(prev => [
+							...prev,
+							...transformMessageItem(result.history, {
+								authorId: store.user.id,
+							}),
+						]);
+						setCurrentMessageOffset(result.nextOffset);
+						setIsInFetchingMoreMessage(false);
+					}
+				}
+			);
 		}
 	}
+
+	console.log(currentMessageOffset);
 
 	function addMessageItemToSelectedItemsHandler(targetMessageId) {
 		setSelectedMessagesId(prev => [...prev, targetMessageId]);
@@ -109,6 +113,27 @@ const Room = () => {
 
 	function removeMessageItemFromSelectedItemsHandler(targetMessageId) {
 		setSelectedMessagesId(prev => prev.filter(messageId => messageId !== targetMessageId));
+	}
+
+	function deleteMessagesFromLocalState(messagesId) {}
+
+	function deleteMessagesFromServerHandler() {
+		console.log("want to remove", selectedMessagesId);
+		if (selectedMessagesId.length === 1) {
+			chatInstance.deleteMessage(
+				{ messageId: selectedMessagesId[0], deleteForAll: true },
+				result => {
+					console.log(result);
+				}
+			);
+		} else {
+			chatInstance.deleteMultipleMessages(
+				{ messageIds: selectedMessagesId, deleteForAll: true },
+				result => {
+					console.log(result);
+				}
+			);
+		}
 	}
 
 	function makeSelectedMessageListEmpty() {
@@ -122,22 +147,13 @@ const Room = () => {
 		config: {},
 	});
 
-	useLayoutEffect(
-		function initialScrollToEndOfMessageContainer() {
-			if (messageListContainerRef.current) scrollToBottomHandler();
-		},
-		[messageListContainerRef]
-	);
-
-	console.log(selectedMessagesId);
-
 	return (
 		<StyledRoom>
 			<div>
 				<Header />
-				{isInFetchingMoreMessage && <LoadingMoreSpinner />}
+				<LoadingMoreSpinner show={isInFetchingMoreMessage} />
 				<MessageList
-					containerTopDistanceMargin={getHalfOfUserViewport()}
+					containerTopDistanceMargin={0}
 					threadId={store.thread.id}
 					selectedMessagesList={selectedMessagesId}
 					items={messageItems}
@@ -148,6 +164,7 @@ const Room = () => {
 				/>
 				<Container className="room__messageInputs">
 					<SelectedMessageController
+						onDeleteHandier={deleteMessagesFromServerHandler}
 						onCloseHandler={makeSelectedMessageListEmpty}
 						selectedMessagesList={selectedMessagesId}
 						show={selectedMessagesId.length}

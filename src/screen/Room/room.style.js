@@ -16,6 +16,7 @@ const StyledRoom = WrapWithStyled("div", theme => ({
 			&__innerContainer {
 				display: flex;
 				flex-direction: column;
+				align-items: center;
 			}
 
 			&__messageInputs {

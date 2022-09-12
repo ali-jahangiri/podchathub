@@ -1,52 +1,47 @@
-import { useCallback } from "react";
-
 import checkForRenderBasicDetails from "utils/checkForRenderBasicDetails";
 import MessageItem from "../Item/MessageItem";
 import EmptyState from "../EmptyState";
 import StyledMessageList from "./messageList.style";
-import debounce from "../../../utils/debounce";
 import usePodSdk from "../../../hooks/usePodSdk";
+import IntersectObserver from "../../../providers/IntersectObserverElement";
 
 const MessageList = ({
 	items = [],
 	containerRef,
 	threadId,
 	onReachToTop,
-	containerTopDistanceMargin,
 	selectMessageHandler,
 	unSelectMessageHandler,
 	selectedMessagesList,
 }) => {
 	const chatInstance = usePodSdk();
-
-	const debouncedScrollHandler = useCallback(
-		debounce(e => {
-			const containerTopPx = e.target.scrollTop;
-			if (containerTopPx <= containerTopDistanceMargin) onReachToTop();
-		}, 50),
-		[]
-	);
-
 	return (
-		<StyledMessageList onScroll={debouncedScrollHandler} ref={containerRef}>
+		<StyledMessageList ref={containerRef}>
 			{items.length ? (
 				items.map((message, i) => (
 					<MessageItem
-						isSelected={selectedMessagesList.find(
-							selectItemId => selectItemId === message.id
-						)}
+						status={{
+							isSelected: selectedMessagesList.find(
+								selectItemId => selectItemId === message.id
+							),
+							isDeleted: false,
+							isEdited: message.edited,
+						}}
 						chatInstance={chatInstance}
 						threadId={threadId}
 						haveToRenderBasicDetails={checkForRenderBasicDetails(message, items[i - 1])}
 						{...message}
-						key={i}
 						selectHandler={selectMessageHandler}
 						unSelectHandler={unSelectMessageHandler}
+						key={i}
 					/>
 				))
 			) : (
 				<EmptyState />
 			)}
+			<IntersectObserver
+				onIntersecting={isIntersection => isIntersection && onReachToTop(isIntersection)}
+			/>
 		</StyledMessageList>
 	);
 };

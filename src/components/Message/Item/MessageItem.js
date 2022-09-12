@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Avatar from "components/Avatar/Avatar";
 import StyledMessageItem from "./messageItem.style";
 import Radio from "../../Radio/Radio";
-import Container from "../../Container/Container";
+import Container from "../../Container";
 
 const MessageItem = ({
 	id,
@@ -14,11 +14,10 @@ const MessageItem = ({
 	haveToRenderBasicDetails,
 	asNew,
 	threadId,
-	edited,
-	isSelected,
 	chatInstance,
 	selectHandler,
 	unSelectHandler,
+	status,
 }) => {
 	const [messageStatus, setMessageStatus] = useState(asNew ? "new" : null);
 
@@ -35,8 +34,6 @@ const MessageItem = ({
 					onSent: function (result) {
 						setMessageStatus("send");
 					},
-					onDeliver: function (result) {},
-					onSeen: function (result) {},
 				});
 			}
 		},
@@ -46,23 +43,23 @@ const MessageItem = ({
 
 	function toggleSelectStatusHandler() {
 		if (source === "author") {
-			if (!isSelected) selectHandler(id);
+			if (!status.isSelected) selectHandler(id);
 			else unSelectHandler(id);
 		}
 	}
 
-	useEffect(
-		function changeMessageStatusBaseOnSelectChange() {
-			setMessageStatus(isSelected ? "selected" : null);
-		},
-		[isSelected]
-	);
+	function checkStatusesToCreateClassName() {
+		return status.isSelected ? "messageItem--selected" : "";
+	}
 
 	return (
 		<StyledMessageItem
+			data-test={asNew}
 			className={`messageItem--${source} ${
 				messageStatus ? `messageItem--${messageStatus}` : ""
-			} ${!haveToRenderBasicDetails ? "messageItem--detailsOmit" : ""}`}
+			} ${checkStatusesToCreateClassName()}  ${
+				!haveToRenderBasicDetails ? "messageItem--detailsOmit" : ""
+			}`}
 		>
 			<Container className="messageItem__box">
 				{haveToRenderBasicDetails && (
@@ -86,7 +83,7 @@ const MessageItem = ({
 				</div>
 				{source === "author" && (
 					<div className="messageItem__selectBox">
-						<Radio onClick={toggleSelectStatusHandler} show={isSelected} />
+						<Radio onClick={toggleSelectStatusHandler} show={status.isSelected} />
 					</div>
 				)}
 			</Container>
