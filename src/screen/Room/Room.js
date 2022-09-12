@@ -2,34 +2,33 @@ import { useRef, useState } from "react";
 import Header from "components/Header";
 import MessageList from "components/Message/List/MessageList";
 import MessageInput from "components/MessageInput";
-import LoadingMoreSpinner from "../../components/Message/LoadingMoreSpinner";
+import LoadingMoreSpinner from "components/Message/LoadingMoreSpinner";
 
-import StyledRoom from "./room.style";
-import useStore from "../../hooks/useStore/useStore";
-import selfClearTimeout from "../../utils/selfClearTimeout";
-import useRoomObserver from "../../hooks/useRoomObserver/useRoomObserver";
+import SelectedMessageController from "components/SelectedMessageController";
+import Container from "components/Container/Container";
+import BackToBottomOfRoom from "components/BackToBottomOfRoom";
+import usePodSdk from "hooks/usePodSdk";
+import useStore from "hooks/useStore";
+import useRoomObserver from "hooks/useRoomObserver";
+import selfClearTimeout from "utils/selfClearTimeout";
+import date from "utils/date";
+import compose from "utils/compose";
 import transformMessageItem, {
 	convertDataProperly,
 	extractOnlyNeededProperly,
 	MessageSchema,
 	omitTheAuthorMessageAdding,
 } from "../../utils/transformMessageItem";
-import date from "../../utils/date";
-import compose from "../../utils/compose";
-import SelectedMessageController from "../../components/SelectedMessageController";
-import Container from "../../components/Container/Container";
-import usePodSdk from "../../hooks/usePodSdk";
+import StyledRoom from "./room.style";
 
 const Room = () => {
 	const [store] = useStore();
 	const chatInstance = usePodSdk();
 
-	// Room internal stats
 	const [isInFetchingMoreMessage, setIsInFetchingMoreMessage] = useState(false);
 	const [selectedMessagesId, setSelectedMessagesId] = useState([]);
-
 	const [messageItems, setMessageItems] = useState(getInitialMessage);
-
+	const [showComeBackToBottomAction, setShowComeBackToBottomAction] = useState(false);
 	const [currentMessageOffset, setCurrentMessageOffset] = useState(
 		() => store.initialMessageHistory.nextOffset
 	);
@@ -56,10 +55,10 @@ const Room = () => {
 		});
 
 		setMessageItems(prev => [newMessage, ...prev]);
-		selfClearTimeout(() => scrollToBottomHandler("smooth"), 10);
+		selfClearTimeout(scrollToBottomHandler, 10);
 	}
 
-	const scrollToBottomHandler = (behavior = "default") => {
+	const scrollToBottomHandler = (behavior = "smooth") => {
 		if (behavior === "smooth") {
 			messageListContainerRef.current.scrollTo({
 				left: 0,
@@ -78,7 +77,7 @@ const Room = () => {
 				extractOnlyNeededProperly
 			)(result.message);
 			setMessageItems(prev => [...prev, finalIncomingMessage]);
-			selfClearTimeout(() => scrollToBottomHandler("smooth"), 10);
+			selfClearTimeout(scrollToBottomHandler, 10);
 		}
 	}
 
@@ -104,8 +103,6 @@ const Room = () => {
 			);
 		}
 	}
-
-	console.log(currentMessageOffset);
 
 	function addMessageItemToSelectedItemsHandler(targetMessageId) {
 		setSelectedMessagesId(prev => [...prev, targetMessageId]);
@@ -159,10 +156,15 @@ const Room = () => {
 					items={messageItems}
 					containerRef={messageListContainerRef}
 					onReachToTop={onReachToTopOfListContainer}
+					onReachToBottom={setShowComeBackToBottomAction}
 					selectMessageHandler={addMessageItemToSelectedItemsHandler}
 					unSelectMessageHandler={removeMessageItemFromSelectedItemsHandler}
 				/>
 				<Container className="room__messageInputs">
+					<BackToBottomOfRoom
+						show={!showComeBackToBottomAction}
+						onClick={() => scrollToBottomHandler()}
+					/>
 					<SelectedMessageController
 						onDeleteHandier={deleteMessagesFromServerHandler}
 						onCloseHandler={makeSelectedMessageListEmpty}

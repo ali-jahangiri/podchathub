@@ -5,6 +5,8 @@ const StyledMessageInput = WrapWithStyled("div", theme => ({
 	base: css`
 		width: 100%;
 		display: flex;
+		position: relative;
+		z-index: 999;
 
 		.messageInput {
 			&__innerContainer {

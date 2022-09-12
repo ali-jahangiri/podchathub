@@ -54,7 +54,6 @@ const MessageItem = ({
 
 	return (
 		<StyledMessageItem
-			data-test={asNew}
 			className={`messageItem--${source} ${
 				messageStatus ? `messageItem--${messageStatus}` : ""
 			} ${checkStatusesToCreateClassName()}  ${

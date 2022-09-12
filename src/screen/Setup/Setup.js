@@ -8,8 +8,8 @@ import Alert from "components/Alert";
 import promiseTimeout from "utils/promiseTimeout";
 import promisify from "utils/promisify";
 import selfClearTimeout from "utils/selfClearTimeout";
+import { FLOW_BLOCK_TIMEOUT, TIMEOUT_ERROR_MESSAGE } from "static/setupKeys";
 import StyledSetup from "./setup.style";
-import { FLOW_BLOCK_TIMEOUT, TIMEOUT_ERROR_MESSAGE } from "../../static/setupKeys";
 
 const Setup = ({ children }) => {
 	const [showSetupScreen, setShowSetupScreen] = useState(true);

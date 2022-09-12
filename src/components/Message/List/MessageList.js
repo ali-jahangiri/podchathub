@@ -10,6 +10,7 @@ const MessageList = ({
 	containerRef,
 	threadId,
 	onReachToTop,
+	onReachToBottom,
 	selectMessageHandler,
 	unSelectMessageHandler,
 	selectedMessagesList,
@@ -17,6 +18,7 @@ const MessageList = ({
 	const chatInstance = usePodSdk();
 	return (
 		<StyledMessageList ref={containerRef}>
+			<IntersectObserver onIntersecting={onReachToBottom} />
 			{items.length ? (
 				items.map((message, i) => (
 					<MessageItem
