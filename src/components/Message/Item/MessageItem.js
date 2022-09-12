@@ -19,11 +19,12 @@ const MessageItem = ({
 	unSelectHandler,
 	status,
 }) => {
-	const [messageStatus, setMessageStatus] = useState(asNew ? "new" : null);
+	const [messageStatus, setMessageStatus] = useState(() => [asNew ? "new" : undefined]);
 
 	useEffect(
 		function sendMessageInParallel() {
 			if (asNew) {
+				setMessageStatus(["new"]);
 				const messageParam = {
 					threadId,
 					textMessage: message,
@@ -32,7 +33,7 @@ const MessageItem = ({
 
 				chatInstance.sendTextMessage(messageParam, {
 					onSent: function (result) {
-						setMessageStatus("send");
+						// setMessageStatus(prev => [...prev, "send"]);
 					},
 				});
 			}
@@ -42,21 +43,18 @@ const MessageItem = ({
 	);
 
 	function toggleSelectStatusHandler() {
-		if (source === "author") {
+		if (source === "author" && messageStatus !== "select") {
 			if (!status.isSelected) selectHandler(id);
 			else unSelectHandler(id);
 		}
 	}
 
-	function checkStatusesToCreateClassName() {
-		return status.isSelected ? "messageItem--selected" : "";
-	}
-
 	return (
 		<StyledMessageItem
-			className={`messageItem--${source} ${
-				messageStatus ? `messageItem--${messageStatus}` : ""
-			} ${checkStatusesToCreateClassName()}  ${
+			className={`messageItem--${source} ${messageStatus
+				.filter(validStatus => validStatus)
+				.map(status => `messageItem--${status}`)
+				.join(" ")} ${status.isSelected ? "messageItem--selected" : ""} ${
 				!haveToRenderBasicDetails ? "messageItem--detailsOmit" : ""
 			}`}
 		>

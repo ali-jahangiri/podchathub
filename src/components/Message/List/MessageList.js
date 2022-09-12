@@ -16,6 +16,7 @@ const MessageList = ({
 	selectedMessagesList,
 }) => {
 	const chatInstance = usePodSdk();
+
 	return (
 		<StyledMessageList ref={containerRef}>
 			<IntersectObserver onIntersecting={onReachToBottom} />
@@ -35,7 +36,7 @@ const MessageList = ({
 						{...message}
 						selectHandler={selectMessageHandler}
 						unSelectHandler={unSelectMessageHandler}
-						key={i}
+						key={message.id}
 					/>
 				))
 			) : (

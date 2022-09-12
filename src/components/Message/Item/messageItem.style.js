@@ -4,10 +4,12 @@ import WrapWithStyled from "utils/WrapWithStyled";
 const animateNewMessageGrow = keyframes`
 	from {
 		max-height: 0px;
+		transform: translateY(50px);
 	}
 
 	to {
 		max-height: 200px;
+		transform: translateY(0);
 	}
 `;
 
@@ -15,7 +17,7 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 	base: css`
 		margin: ${theme.space[5]} 0;
 		margin-bottom: ${theme.space[8]};
-		transition: ${theme.animateDuration.fast};
+		transition: all ${theme.animateDuration.fast}, padding-right 0s;
 		display: flex;
 
 		.messageItem {
@@ -93,9 +95,7 @@ const StyledMessageItem = WrapWithStyled("div", theme => ({
 			}
 
 			&--new {
-				animation: ${animateNewMessageGrow} ${theme.animateDuration.slow} forwards alternate
-					cubic-bezier(0.755, 0.05, 0.855, 0.06);
-
+				animation: ${animateNewMessageGrow} ${theme.animateDuration.slow} forwards alternate;
 				opacity: 0.8;
 			}
 

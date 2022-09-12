@@ -8,7 +8,7 @@ const StyledSelectedMessageController = WrapWithStyled("div", theme => ({
 		background-color: white;
 		transition: ${theme.animateDuration.slow};
 		position: fixed;
-		z-index: 2;
+		z-index: 99;
 		border-radius: ${theme.radius[3]};
 		bottom: -100%;
 		left: 0;

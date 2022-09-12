@@ -49,13 +49,14 @@ const Room = () => {
 			threadId: store.thread.id,
 			message,
 			source: "author",
+			id: Date.now(),
 			owner: {
 				firstName: "شما",
 			},
 		});
 
 		setMessageItems(prev => [newMessage, ...prev]);
-		selfClearTimeout(scrollToBottomHandler, 10);
+		selfClearTimeout(scrollToBottomHandler, 250);
 	}
 
 	const scrollToBottomHandler = (behavior = "smooth") => {
@@ -150,7 +151,6 @@ const Room = () => {
 				<Header />
 				<LoadingMoreSpinner show={isInFetchingMoreMessage} />
 				<MessageList
-					containerTopDistanceMargin={0}
 					threadId={store.thread.id}
 					selectedMessagesList={selectedMessagesId}
 					items={messageItems}
